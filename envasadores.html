@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Envasadores · Gestión de Envasado</title>
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/pages/envasadores.css">
+</head>
+<body>
+
+<div class="sidebar-scrim"></div>
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">GE</div>
+      <div class="brand-text">
+        <strong>Gestión de Envasado</strong>
+        <span>Planta de producción</span>
+      </div>
+    </div>
+
+    <nav class="nav-group">
+      <span class="nav-label">Operación</span>
+      <span class="nav-link locked" title="Acceso restringido: solo calidad y supervisión pueden entrar a Producción">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+        Producción
+        <svg class="nav-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      </span>
+      <span class="nav-link locked" title="Acceso restringido: solo calidad y supervisión pueden entrar a Calidad">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4M12 3l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7z"/></svg>
+        Calidad
+        <svg class="nav-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      </span>
+      <a class="nav-link active" href="envasadores.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Envasadores
+      </a>
+      <p class="nav-restricted-note">Este módulo es independiente: aquí no se pueden crear producciones ni aprobar calidad.</p>
+    </nav>
+
+    <div class="sidebar-footer">
+      Base de datos: Google Sheets<br>
+      Sincronización en vivo
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <div class="eyebrow">Módulo de envasadores</div>
+        <button class="menu-toggle" aria-label="Abrir menú">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <h1>Mis productos a envasar</h1>
+      </div>
+      <div class="page-header-actions">
+        <div class="field" style="margin:0; min-width:220px;">
+          <select class="input" id="selector-perfil">
+            <option value="">Ver todos los envasadores</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="sonido-banner" id="banner-sonido">
+      <div class="notif-row">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span>Activa el sonido para enterarte al instante cuando calidad apruebe un producto.</span>
+      </div>
+      <button class="btn btn-primary btn-sm" id="btn-activar-sonido">Activar notificaciones</button>
+    </div>
+
+    <div class="page-header" style="margin-bottom:14px;">
+      <div class="live-indicator">
+        <span class="live-dot"></span>
+        <span id="texto-ultima-actualizacion">Actualizando…</span>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="btn-refrescar">Actualizar ahora</button>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card accent-neutral"><div class="stat-value" id="stat-pendiente">—</div><div class="stat-label">Pendientes</div></div>
+      <div class="stat-card accent-info"><div class="stat-value" id="stat-proceso">—</div><div class="stat-label">En proceso</div></div>
+      <div class="stat-card accent-success"><div class="stat-value" id="stat-finalizado">—</div><div class="stat-label">Finalizados</div></div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="search-box">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="buscador" placeholder="Buscar por producto…">
+      </div>
+      <div class="date-group">
+        <span>Fecha</span>
+        <input type="date" id="filtro-fecha">
+      </div>
+      <button class="btn btn-ghost btn-sm" id="btn-hoy">Hoy</button>
+      <button class="btn btn-ghost btn-sm" id="btn-limpiar-filtro-fecha">Ver todo</button>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Tanque</th>
+            <th>Preparador</th>
+            <th>Envasador</th>
+            <th>Aprobación de calidad</th>
+            <th>Estatus de envasado</th>
+            <th>Retraso</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-envasadores">
+          <tr><td colspan="8"><div class="empty-state">Cargando productos…</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/components/modal.js"></script>
+<script src="js/components/toast.js"></script>
+<script src="js/components/sonido.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/pages/envasadores.js"></script>
+</body>
+</html>

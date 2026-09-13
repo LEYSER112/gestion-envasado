@@ -1,0 +1,45 @@
+:root {
+  /* --- Superficies --- */
+  --bg-base: #12151b;
+  --bg-surface: #191d25;
+  --bg-surface-raised: #222733;
+  --bg-surface-hover: #2a303d;
+  --border-subtle: #2b303c;
+  --border-strong: #3a4150;
+
+  /* --- Texto --- */
+  --text-primary: #eef1f6;
+  --text-secondary: #9aa5b6;
+  --text-muted: #6b7484;
+  --text-on-accent: #14171c;
+
+  /* --- Acento (panel de control / indicadores industriales) --- */
+  --accent: #f2a93b;
+  --accent-hover: #ffbe5c;
+  --accent-soft: rgba(242, 169, 59, 0.14);
+
+  /* --- Estatus semánticos --- */
+  --status-aprobado: #35c98b;
+  --status-aprobado-bg: rgba(53, 201, 139, 0.14);
+  --status-no-aprobado: #ef5b5b;
+  --status-no-aprobado-bg: rgba(239, 91, 91, 0.14);
+  --status-en-proceso: #4fa3f7;
+  --status-en-proceso-bg: rgba(79, 163, 247, 0.14);
+  --status-pendiente: #9aa5b6;
+  --status-pendiente-bg: rgba(154, 165, 182, 0.14);
+  --status-finalizado: #35c98b;
+  --status-finalizado-bg: rgba(53, 201, 139, 0.14);
+
+  /* --- Tipografía --- */
+  --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --font-body: 'Inter', 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Consolas', monospace;
+
+  /* --- Layout --- */
+  --sidebar-width: 232px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-panel: 0 12px 32px rgba(0, 0, 0, 0.35);
+  --transition-fast: 140ms ease;
+}

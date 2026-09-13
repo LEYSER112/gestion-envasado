@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Producción · Gestión de Envasado</title>
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/pages/produccion.css">
+</head>
+<body>
+
+<div class="sidebar-scrim"></div>
+<div class="app-shell">
+
+  <!-- ============================= SIDEBAR ============================= -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">GE</div>
+      <div class="brand-text">
+        <strong>Gestión de Envasado</strong>
+        <span>Planta de producción</span>
+      </div>
+    </div>
+
+    <nav class="nav-group">
+      <span class="nav-label">Operación</span>
+      <a class="nav-link active" href="index.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+        Producción
+      </a>
+      <a class="nav-link" href="calidad.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4M12 3l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7z"/></svg>
+        Calidad
+      </a>
+      <a class="nav-link" href="envasadores.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Envasadores
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      Base de datos: Google Sheets<br>
+      Sincronización en vivo
+    </div>
+  </aside>
+
+  <!-- ============================= CONTENIDO ============================= -->
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <div class="eyebrow">Módulo de producción</div>
+        <button class="menu-toggle" aria-label="Abrir menú">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <h1>Programación de producciones</h1>
+      </div>
+      <div class="page-header-actions">
+        <button class="btn btn-secondary" id="btn-abrir-usuarios">Preparadores / envasadores</button>
+        <button class="btn btn-secondary" id="btn-abrir-turno">Finalizar turno</button>
+        <button class="btn btn-primary" id="btn-abrir-produccion">+ Nueva producción</button>
+      </div>
+    </div>
+
+    <div class="stat-grid" id="stats-produccion">
+      <div class="stat-card"><div class="stat-value" id="stat-total">—</div><div class="stat-label">Registros del filtro</div></div>
+      <div class="stat-card accent-danger"><div class="stat-value" id="stat-no-aprobado">—</div><div class="stat-label">Sin aprobar en calidad</div></div>
+      <div class="stat-card accent-neutral"><div class="stat-value" id="stat-pendiente">—</div><div class="stat-label">Pendientes</div></div>
+      <div class="stat-card accent-info"><div class="stat-value" id="stat-en-proceso">—</div><div class="stat-label">En proceso</div></div>
+      <div class="stat-card accent-success"><div class="stat-value" id="stat-finalizado">—</div><div class="stat-label">Finalizados</div></div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="search-box">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="buscador" placeholder="Buscar por producto, preparador o envasador…">
+      </div>
+      <select class="input" id="filtro-estatus-envasado" style="max-width:180px;">
+        <option value="">Todos los estatus</option>
+        <option value="Pendiente">Pendiente</option>
+        <option value="En proceso">En proceso</option>
+        <option value="Finalizado">Finalizado</option>
+      </select>
+      <div class="date-group">
+        <span>Desde</span>
+        <input type="date" id="filtro-desde">
+      </div>
+      <div class="date-group">
+        <span>Hasta</span>
+        <input type="date" id="filtro-hasta">
+      </div>
+      <button class="btn btn-ghost btn-sm" id="btn-limpiar-filtros">Limpiar</button>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Preparador</th>
+            <th>Tanque</th>
+            <th>Envasador</th>
+            <th>Calidad</th>
+            <th>Envasado</th>
+            <th>Retraso</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-produccion">
+          <tr><td colspan="9"><div class="empty-state">Cargando registros…</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- ============================= MODAL: NUEVA PRODUCCIÓN ============================= -->
+<div class="modal-overlay" id="modal-produccion">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Nueva producción</h3>
+      <button class="icon-btn" data-close-modal>✕</button>
+    </div>
+    <form id="form-produccion">
+      <div class="modal-body">
+        <div class="field">
+          <label for="campo-producto">Producto</label>
+          <select class="input" id="campo-producto" required></select>
+        </div>
+        <div class="input-row">
+          <div class="field">
+            <label for="campo-cantidad">Cantidad</label>
+            <input class="input" type="number" min="0" step="0.01" id="campo-cantidad" required>
+          </div>
+          <div class="field">
+            <label for="campo-tanque">Tanque</label>
+            <input class="input" type="text" id="campo-tanque" placeholder="Ej: Tanque 3" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="campo-preparador">Preparador</label>
+          <select class="input" id="campo-preparador" required></select>
+        </div>
+        <div class="field">
+          <label for="campo-envasador">Envasador</label>
+          <select class="input" id="campo-envasador" required></select>
+        </div>
+        <div class="field">
+          <label for="campo-fecha">Fecha de producción</label>
+          <input class="input" type="date" id="campo-fecha" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="btn-guardar-produccion">Programar producción</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================= MODAL: PREPARADORES / ENVASADORES ============================= -->
+<div class="modal-overlay" id="modal-usuarios">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Preparadores y envasadores</h3>
+      <button class="icon-btn" data-close-modal>✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="form-usuario" class="input-row" style="margin-bottom:16px;">
+        <input class="input" type="text" id="campo-nuevo-usuario" placeholder="Nombre completo" required>
+        <button type="submit" class="btn btn-primary btn-sm" style="flex:0 0 auto;">Registrar</button>
+      </form>
+      <div class="text-muted" style="font-size:12.5px; margin-bottom:10px;">Este listado se usa tanto para preparadores como para envasadores.</div>
+      <div id="lista-usuarios" class="table-wrap" style="max-height:280px; overflow-y:auto;"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-close-modal>Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= MODAL: FINALIZAR TURNO ============================= -->
+<div class="modal-overlay" id="modal-turno">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3>Finalizar turno</h3>
+      <button class="icon-btn" data-close-modal>✕</button>
+    </div>
+    <div class="modal-body" id="cuerpo-turno">
+      <div class="empty-state">Cargando resumen del día…</div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
+      <button type="button" class="btn btn-danger" id="btn-confirmar-turno">Confirmar cierre de turno</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js?v=2"></script>
+<script src="js/api.js?v=2"></script>
+<script src="js/utils.js?v=2"></script>
+<script src="js/components/modal.js?v=2"></script>
+<script src="js/components/toast.js?v=2"></script>
+<script src="js/layout.js?v=2"></script>
+<script src="js/pages/produccion.js?v=2"></script>
+</body>
+</html>

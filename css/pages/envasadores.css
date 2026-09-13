@@ -1,0 +1,10 @@
+.data-table select.status-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.locked-note {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}

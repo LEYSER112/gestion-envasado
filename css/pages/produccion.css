@@ -1,0 +1,36 @@
+#lista-usuarios .data-table td { white-space: normal; }
+
+.resumen-turno-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.resumen-turno-grid .stat-card { padding: 12px 14px; }
+.resumen-turno-grid .stat-value { font-size: 20px; }
+
+.turno-seccion h4 {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 18px 0 10px;
+}
+
+.turno-fila {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.turno-fila .turno-info { flex: 1; min-width: 160px; font-size: 13px; }
+.turno-fila .turno-info strong { display: block; font-size: 13.5px; }
+.turno-fila select { min-width: 160px; }
+
+.cumplimiento-table th, .cumplimiento-table td { white-space: normal; }
